@@ -1,21 +1,24 @@
 const { Model, DataTypes, Sequelize } = require('sequelize')
-const CATEGORY_TABLE = 'categories'
+const { CUSTOMER_TABLE } = require('./customer.model')
+const ORDER_TABLE = 'orders'
 
-const CategorySchema = {
+const OrderSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
     type: DataTypes.INTEGER,
   },
-  name: {
-    type: DataTypes.STRING,
-    unique: true,
+  customerId:{
+    field: 'customer_id',
     allowNull: false,
-  },
-  image: {
-    type: DataTypes.STRING,
-    allowNull: true,
+    type: DataTypes.INTEGER,
+    references: {
+      model: CUSTOMER_TABLE,
+      key: 'id'
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
   },
   createdAt: {
     allowNull: false,
@@ -31,28 +34,27 @@ const CategorySchema = {
 }
 
 
-class Category extends Model {
+class Order extends Model {
   static associate(models){
-    this.hasMany(models.Product, {
-      as: 'products',
-      foreignKey: 'categoryId'
+    this.belongsTo(models.Customer, {
+      as: 'customer',
     })
   }
 
   static config(sequelize){
     return {
       sequelize,
-      tableName: CATEGORY_TABLE,
-      modelName: 'Category',
+      tableName: ORDER_TABLE,
+      modelName: 'Order',
       timesStamps: false,
     }
   }
 }
 
 module.exports = {
-  CATEGORY_TABLE,
-  CategorySchema,
-  Category,
+  ORDER_TABLE,
+  OrderSchema,
+  Order,
 }
 
 

@@ -31,6 +31,11 @@ const ProductSchema = {
     field: 'create_at',
     defaultValue: Sequelize.NOW
   },
+  updatedAt: {
+    allowNull: true,
+    type: DataTypes.DATE,
+    field: 'updated_at',
+  },
   categoryId: {
     field: 'category_id',
     allowNull: false,
